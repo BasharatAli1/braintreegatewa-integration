@@ -12,4 +12,9 @@ router.post(
     braintreeController.create_customer
 );
 
+router.post(
+    '/checkout',
+    braintreeController.checkout
+);
+
 module.exports = router;

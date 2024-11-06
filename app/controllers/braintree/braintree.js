@@ -19,3 +19,13 @@ module.exports.create_customer = async function (req, res, next) {
 		return next(e);
 	}
 };
+
+module.exports.checkout = async function (req, res, next) {
+	try {
+        const response = await braintreeService.checkout(req.body);
+		return res.send(response);
+	} catch (e) {
+        console.log('ERR :::', e);
+		return next(e);
+	}
+};

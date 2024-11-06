@@ -1,5 +1,5 @@
+
 const braintree = require("braintree");
-const { promisify } = require("util");
 
 const gateway = new braintree.BraintreeGateway({
     environment: braintree.Environment.Sandbox,
@@ -8,48 +8,82 @@ const gateway = new braintree.BraintreeGateway({
     privateKey: process.env.PRIVATE_KEY
 });
 
-const generateToken = promisify(gateway.clientToken.generate).bind(gateway);
-const createBraintreeCustomer = promisify(gateway.customer.create).bind(gateway);
-
-// Generate a client token with the provided customer ID
-async function generateClientToken(aCustomerId) {
+module.exports.generate_client_token = async () => {
     try {
-        const response = await generateToken({ customerId: aCustomerId });
-        return response.clientToken;
-    } catch (error) {
-        console.error("Error generating client token:", error.message);
-        throw error;
-    }
-}
-
-// Create a customer with the provided payload
-async function createCustomer(payload) {
-    try {
-        const response = await createBraintreeCustomer(payload);
-        return response?.customer;
-    } catch (error) {
-        console.error("Error creating customer:", error.message);
-        throw error;
-    }
-}
-
-module.exports = {
-    generate_client_token: async () => {
-        try {
-            const clientToken = await generateClientToken('56607047249');
-            return clientToken;
-        } catch (e) {
-            console.error("generate_client_token error:", e.message);
-            throw e;
-        }
-    },
-
-    create_customer: async (payload) => {
-        try {
-            return await createCustomer(payload);
-        } catch (e) {
-            console.error("create_customer error:", e.message);
-            throw e;
-        }
+        const clientToken = await generate_client_token('56607047249', gateway);
+		return clientToken;
+    } catch (e) {
+        console.log("generate_client_token err: ", e.message);
     }
 };
+
+module.exports.create_customer = async (payload, params) => {
+    try {
+        const response = await create_customer(payload, gateway);
+        
+		return response?.customer;
+    } catch (e) {
+        console.log("create_customer err: ", e.message);
+    }
+};
+
+
+module.exports.checkout = async (payload) => {
+    try {
+        const response = await checkout(payload, gateway);
+		return response;
+    } catch (e) {
+        console.log("checkout err: ", e.message);
+    }
+};
+
+
+async function generate_client_token(aCustomerId, gateway) {
+    try {
+        const response = await new Promise((resolve, reject) => {
+            gateway.clientToken.generate({ customerId: aCustomerId }, (err, response) => {
+                if (err) reject(err);
+                else resolve(response);
+            });
+        });
+        
+        // Access the clientToken
+        const clientToken = response.clientToken;
+        return clientToken;
+    } catch (error) {
+        console.error("Error generating client token:", error);
+        throw error;
+    }
+}
+
+async function create_customer(data, gateway) {
+    try {
+        const response = await new Promise((resolve, reject) => {
+            gateway.customer.create(data, (err, response) => {
+                if (err) reject(err);
+                else resolve(response);
+            });
+        });
+        
+        return response;
+    } catch (error) {
+        console.error("Error creating customer:", error);
+        throw error;
+    }
+}
+// Create a transaction with the provided payload
+async function checkout(payload) {
+    try {
+        console.log('checkout payload :::', payload);
+        const response = await new Promise((resolve, reject) => {
+            gateway.transaction.sale(payload, (err, response) => {
+                if (err) reject(err);
+                else resolve(response);
+            });
+        });
+        return response;
+    } catch (error) {
+        console.error("Error checkout:", error.message);
+        throw error;
+    }
+}
