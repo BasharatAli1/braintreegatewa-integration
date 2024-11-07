@@ -34,10 +34,14 @@ module.exports.checkout = async (payload) => {
         const { Order } = db;
         const productName = payload.productName;
         const productQty = payload.productQty;
+        const fullName = payload.fullName;
+        const currency = payload.currency;
         delete payload.productName;
         delete payload.productQty;
+        delete payload.fullName;
+        delete payload.currency;
         const response = await checkout(payload, gateway);
-        Order.create({ amount: payload.amount, productName, productQty });
+        Order.create({ amount: payload.amount, productName, productQty, fullName, currency, transactionInfo: response });
 		return response;
     } catch (e) {
         console.log("checkout err: ", e.message);
@@ -82,7 +86,6 @@ async function create_customer(data, gateway) {
 // Create a transaction with the provided payload
 async function checkout(payload) {
     try {
-        console.log('checkout payload :::', payload);
         const response = await new Promise((resolve, reject) => {
             gateway.transaction.sale(payload, (err, response) => {
                 if (err) reject(err);

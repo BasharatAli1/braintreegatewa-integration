@@ -9,16 +9,32 @@
 <body>
     <!-- Custom Fields -->
     <div>
+        <label for="full-name">Full Name:</label>
+        <input type="text" id="full-name" name="full-name" required />
+    </div>
+    <div>
         <label for="amount">Amount:</label>
-        <input type="text" id="amount" name="amount" />
+        <input type="text" id="amount" name="amount" required />
     </div>
     <div>
         <label for="product-name">Product Name:</label>
-        <input type="text" id="product-name" name="product-name" />
+        <input type="text" id="product-name" name="product-name" required />
     </div>
     <div>
         <label for="product-qty">Product Quantity:</label>
-        <input type="number" id="product-qty" name="product-qty" />
+        <input type="number" id="product-qty" name="product-qty" required />
+    </div>
+    <div>
+        <label for="currency">Currency:</label>
+        <select id="currency" name="currency" required>
+            <option value="">Select Currency</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="THB">THB</option>
+            <option value="HKD">HKD</option>
+            <option value="SGD">SGD</option>
+            <option value="AUD">AUD</option>
+        </select>
     </div>
 
     <!-- Container for the Drop-in UI -->

@@ -20,9 +20,18 @@
         const submitButton = document.getElementById('submit-button');
         submitButton.addEventListener('click', () => {
             // Get custom field values
-            const amount = document.getElementById('amount').value;
-            const productName = document.getElementById('product-name').value;
-            const productQty = document.getElementById('product-qty').value;
+            const fullName = document.getElementById('full-name').value.trim();
+            const amount = document.getElementById('amount').value.trim();
+            const productName = document.getElementById('product-name').value.trim();
+            const productQty = document.getElementById('product-qty').value.trim();
+            const currency = document.getElementById('currency').value;
+
+            // Validate fields
+            if (!fullName || !amount || !productName || !productQty || !currency) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
             dropinInstance.requestPaymentMethod((err, payload) => {
             if (err) {
                 console.error('Request Payment Method :::', err);
@@ -37,16 +46,18 @@
                 'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                paymentMethodNonce: payload.nonce,
-                amount: amount || 0,
-                productName: productName,
-                productQty: productQty,
-            //     "creditCard": {
-            //         "number": `${payload.details.bin}${payload.details.lastFour}`,
-            //         "expirationMonth": payload.details.expirationMonth,
-            //         "expirationYear": payload.details.expirationYear,
-            //         "cvv": "111"
-            //   }
+                    paymentMethodNonce: payload.nonce,
+                    fullName: fullName,
+                    amount: amount,
+                    productName: productName,
+                    productQty: productQty,
+                    currency: currency
+                //     "creditCard": {
+                //         "number": `${payload.details.bin}${payload.details.lastFour}`,
+                //         "expirationMonth": payload.details.expirationMonth,
+                //         "expirationYear": payload.details.expirationYear,
+                //         "cvv": "111"
+                //   }
             })
             })
             .then(response => response.json())

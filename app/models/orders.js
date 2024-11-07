@@ -13,6 +13,15 @@ const initializeOrderModel = async(sequelize, DataTypes, db) => {
             productName: {
               type: DataTypes.STRING,
             },
+            fullName: {
+              type: DataTypes.STRING,
+            },
+            currency: {
+              type: DataTypes.STRING,
+            },
+            transactionInfo: {
+                type: DataTypes.JSON,
+            },
         },
         {
           createdAt: 'created_at',
