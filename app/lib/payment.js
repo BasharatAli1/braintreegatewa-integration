@@ -1,5 +1,5 @@
 
-    // Fetch the client token from your server
+    // Fetch the client token from server
     fetch('http://127.0.0.0:3000/api/client_token')
     .then(response => response.text())
     .then(clientToken => {
@@ -19,6 +19,10 @@
         // Handle payment submission
         const submitButton = document.getElementById('submit-button');
         submitButton.addEventListener('click', () => {
+            // Get custom field values
+            const amount = document.getElementById('amount').value;
+            const productName = document.getElementById('product-name').value;
+            const productQty = document.getElementById('product-qty').value;
             dropinInstance.requestPaymentMethod((err, payload) => {
             if (err) {
                 console.error('Request Payment Method :::', err);
@@ -26,7 +30,7 @@
             }
 
             // console.log('Request Payment Method payload:::', payload);
-            // Send the payload nonce to your server
+                    // Send the payload nonce and custom fields to server
             fetch('http://127.0.0.0:3000/api/checkout', {
                 method: 'POST',
                 headers: {
@@ -34,7 +38,9 @@
                 },
                 body: JSON.stringify({
                 paymentMethodNonce: payload.nonce,
-                amount: "100",
+                amount: amount || 0,
+                productName: productName,
+                productQty: productQty,
             //     "creditCard": {
             //         "number": `${payload.details.bin}${payload.details.lastFour}`,
             //         "expirationMonth": payload.details.expirationMonth,

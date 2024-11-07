@@ -30,10 +30,15 @@ module.exports.create_customer = async (payload, params) => {
 
 module.exports.checkout = async (payload) => {
     try {
+        const productName = payload.productName;
+        const productQty = payload.productQty;
+        delete payload.productName;
+        delete payload.productQty;
         const response = await checkout(payload, gateway);
 		return response;
     } catch (e) {
         console.log("checkout err: ", e.message);
+        throw e;
     }
 };
 

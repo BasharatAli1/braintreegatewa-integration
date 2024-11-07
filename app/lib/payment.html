@@ -7,12 +7,24 @@
     <link rel="stylesheet" href="payment.css" />
 </head>
 <body>
+    <!-- Custom Fields -->
+    <div>
+        <label for="amount">Amount:</label>
+        <input type="text" id="amount" name="amount" />
+    </div>
+    <div>
+        <label for="product-name">Product Name:</label>
+        <input type="text" id="product-name" name="product-name" />
+    </div>
+    <div>
+        <label for="product-qty">Product Quantity:</label>
+        <input type="number" id="product-qty" name="product-qty" />
+    </div>
+
     <!-- Container for the Drop-in UI -->
     <div id="dropin-container"></div>
     <button id="submit-button">Pay Now</button>
 
     <script src="payment.js"></script>
-    <script>
-    </script>
 </body>
 </html>
