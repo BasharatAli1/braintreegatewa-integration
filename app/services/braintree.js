@@ -1,5 +1,6 @@
 
 const braintree = require("braintree");
+const db = require('../../database/config');
 
 const gateway = new braintree.BraintreeGateway({
     environment: braintree.Environment.Sandbox,
@@ -30,11 +31,13 @@ module.exports.create_customer = async (payload, params) => {
 
 module.exports.checkout = async (payload) => {
     try {
+        const { Order } = db;
         const productName = payload.productName;
         const productQty = payload.productQty;
         delete payload.productName;
         delete payload.productQty;
         const response = await checkout(payload, gateway);
+        Order.create({ amount: payload.amount, productName, productQty });
 		return response;
     } catch (e) {
         console.log("checkout err: ", e.message);
